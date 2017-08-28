@@ -15,11 +15,11 @@ use Composer\Installer\LibraryInstaller;
 class WordPressRelatedInstallers extends LibraryInstaller
 {
 	protected $locations = array(
-		'wordpress-core'        => '{{CORE_PATH}}',
-		'wordpress-plugin'      => '{{CONTENT_PATH}}plugins/{$name}/',
-		'wordpress-theme'       => '{{CONTENT_PATH}}themes/{$name}/',
-		'wordpress-muplugin'    => '{{CONTENT_PATH}}mu-plugins/{$name}/',
-		'wordpress-library'     => '{{CONTENT_PATH}}libraries/{$name}/',
+		'wordpress-core'        => '{{WEBROOT_PATH}}{{CORE_PATH}}',
+		'wordpress-plugin'      => '{{WEBROOT_PATH}}{{CONTENT_PATH}}plugins/{$name}/',
+		'wordpress-theme'       => '{{WEBROOT_PATH}}{{CONTENT_PATH}}themes/{$name}/',
+		'wordpress-muplugin'    => '{{WEBROOT_PATH}}{{CONTENT_PATH}}mu-plugins/{$name}/',
+		'wordpress-library'     => '{{WEBROOT_PATH}}{{CONTENT_PATH}}libraries/{$name}/',
 		'wordpress-devops-core' => 'devops/core/',
 	);
 
@@ -80,6 +80,14 @@ class WordPressRelatedInstallers extends LibraryInstaller
 				: 'content/';
 
 			/**
+			 * Allow WordPress' content path to changed
+			 * Defaults to `content/`
+			 */
+			$webrootPath = ! empty( $extra[ 'wordpress-webroot-path' ] )
+				? rtrim( $extra[ 'wordpress-webroot-path' ], '/' ) . '/'
+				: 'www/';
+
+			/**
 			 * Get the `composer.extra` from package's composer.json
 			 */
 			$extra = $package->getExtra();
@@ -98,10 +106,11 @@ class WordPressRelatedInstallers extends LibraryInstaller
 			$installDir = $this->locations[ $packageType ];
 
 			/**
-			 * Allow replacement of CORE and CONTENT paths
+			 * Allow replacement of CORE, CONTENT and WEBROOT_PATH paths
 			 */
 			$installDir = str_replace( '{{CORE_PATH}}', $corePath, $installDir );
 			$installDir = str_replace( '{{CONTENT_PATH}}', $contentPath, $installDir );
+			$installDir = str_replace( '{{WEBROOT_PATH}}', $webrootPath, $installDir );
 
 			$message = null;
 
