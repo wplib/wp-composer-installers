@@ -15,7 +15,7 @@ use Composer\Installer\LibraryInstaller;
 class WordPressRelatedInstallers extends LibraryInstaller
 {
 	protected $locations = array(
-		'wordpress-core'        => '{{WEBROOT_PATH}}{{CORE_PATH}}',
+		'wordpress-core'        => '{{WEBROOT_PATH}}{{CORE_PATH}}/',
 		'wordpress-plugin'      => '{{WEBROOT_PATH}}{{CONTENT_PATH}}plugins/{$name}/',
 		'wordpress-theme'       => '{{WEBROOT_PATH}}{{CONTENT_PATH}}themes/{$name}/',
 		'wordpress-muplugin'    => '{{WEBROOT_PATH}}{{CONTENT_PATH}}mu-plugins/{$name}/',
@@ -103,7 +103,7 @@ class WordPressRelatedInstallers extends LibraryInstaller
 			/**
 			 * Default the install dir to value specified above in $this->locations
 			 */
-			$installDir = $this->locations[ $packageType ];
+			$installDir = rtrim( $this->locations[ $packageType ], '/' ) . '/';
 
 			/**
 			 * Allow replacement of CORE, CONTENT and WEBROOT_PATH paths
