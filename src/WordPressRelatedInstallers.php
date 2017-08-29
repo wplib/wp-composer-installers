@@ -31,16 +31,20 @@ class WordPressRelatedInstallers extends LibraryInstaller
 
 		do {
 
-			$composer = $this->composer;
-
 			$packageType = $package->getType();
-			$prettyName  = $package->getPrettyName();
-			$packagePath = basename( $package->getName() );
 
-			if ( ! isset( $this->locations[ $packageType ] ) ) {
+			if (!isset($this->locations[$packageType])) {
 				$message = sprintf( 'Package type [%s] in not supported by wp-composer-installers.', $packageType );
 				throw new \InvalidArgumentException( $message );
 			}
+
+			$prettyName  = $package->getPrettyName();
+			$packageName = $package->getName();
+
+			$corePath    = 'wp/';
+			$contentPath = 'content/';
+			$webrootPath = 'www/';
+			$packagePath = basename( $package->getName() );
 
 			$dirPropertyName = $this->dirPropertyName( $package );
 
@@ -52,41 +56,62 @@ class WordPressRelatedInstallers extends LibraryInstaller
 				$dirPropertyName = 'wordpress-core-install-dir';
 			}
 
-			/**
+			$composer = $this->composer;
+
+			/*
 			 * Get `composer.extra` from project's local composer.json
 			 */
 			if ( $composer->getPackage() ) {
 				$composerPackage = $composer->getPackage();
 				$extra = $composerPackage->getExtra();
-				if ( ! empty( $extra[ $dirPropertyName ] ) ) {
-					$installDir = $extra[ $dirPropertyName ];
+
+				/**
+				 * Allow WordPress' core path to changed
+				 * Defaults to `wp/`
+				 */
+				$corePath = ! empty( $extra[ 'wordpress-core-path' ] )
+					? rtrim( $extra[ 'wordpress-core-path' ], '/' ) . '/'
+					: $corePath;
+
+				/**
+				 * Allow WordPress' content path to changed
+				 * Defaults to `content/`
+				 */
+				$contentPath = !empty($extra['wordpress-content-path'])
+					? rtrim($extra['wordpress-content-path'],'/').'/'
+					: $contentPath;
+
+				/**
+				 * Allow WordPress' content path to changed
+				 * Defaults to `content/`
+				 */
+				$webrootPath = !empty($extra['wordpress-webroot-path'])
+					? rtrim($extra['wordpress-webroot-path'],'/').'/'
+					: $webrootPath;
+
+				if (!empty($extra['installer-paths']) && is_array($extra['installer-paths'])) {
+					/*
+					 * See if composer.extra.'installer-paths' in project.json
+					 * has hardcoded this type or this specific package.
+					 */
+					foreach( $extra['installer-paths'] as $maybeDir => $testItems ) {
+						foreach( $testItems as $testItem ) {
+							if ( "type:{$packageType}" === $testItem || $packageName === $testItem ) {
+								$installDir = $maybeDir;
+								break;
+							}
+						}
+					}
+					if (isset($installDir)) {
+						break;
+					}
+				}
+
+				if (!empty($extra[$dirPropertyName])) {
+					$installDir = $extra[$dirPropertyName];
 					break;
 				}
 			}
-
-			/**
-			 * Allow WordPress' core path to changed
-			 * Defaults to `wp/`
-			 */
-			$corePath = ! empty( $extra[ 'wordpress-core-path' ] )
-				? rtrim( $extra[ 'wordpress-core-path' ], '/' ) . '/'
-				: 'wp/';
-
-			/**
-			 * Allow WordPress' content path to changed
-			 * Defaults to `content/`
-			 */
-			$contentPath = ! empty( $extra[ 'wordpress-content-path' ] )
-				? rtrim( $extra[ 'wordpress-content-path' ], '/' ) . '/'
-				: 'content/';
-
-			/**
-			 * Allow WordPress' content path to changed
-			 * Defaults to `content/`
-			 */
-			$webrootPath = ! empty( $extra[ 'wordpress-webroot-path' ] )
-				? rtrim( $extra[ 'wordpress-webroot-path' ], '/' ) . '/'
-				: 'www/';
 
 			/**
 			 * Get the `composer.extra` from package's composer.json
@@ -96,23 +121,15 @@ class WordPressRelatedInstallers extends LibraryInstaller
 			/**
 			 * Capture the install directory from the package itself
 			 */
-			if ( ! empty( $extra[ $dirPropertyName ] ) ) {
-				$installDir = $extra[ $dirPropertyName ];
+			if (!empty($extra[$dirPropertyName])) {
+				$installDir = $extra[$dirPropertyName];
 				break;
 			}
 
 			/**
 			 * Default the install dir to value specified above in $this->locations
 			 */
-			$installDir = rtrim( $this->locations[ $packageType ], '/' ) . '/';
-
-			/**
-			 * Allow replacement of CORE, CONTENT and WEBROOT_PATH paths
-			 */
-			$installDir = str_replace( '{$core_path}', $corePath, $installDir );
-			$installDir = str_replace( '{$content_path}', $contentPath, $installDir );
-			$installDir = str_replace( '{$webroot_path}', $webrootPath, $installDir );
-			$installDir = str_replace( '{$name}', $packagePath, $installDir );
+			$installDir = $this->locations[ $packageType ];
 
 			$message = null;
 
@@ -128,7 +145,15 @@ class WordPressRelatedInstallers extends LibraryInstaller
 
 		} while ( false );
 
-		return $installDir;
+		/**
+		 * Allow replacement of CORE, CONTENT and WEBROOT_PATH paths
+		 */
+		$installDir = str_replace( '{$core_path}', $corePath, $installDir );
+		$installDir = str_replace( '{$content_path}', $contentPath, $installDir );
+		$installDir = str_replace( '{$webroot_path}', $webrootPath, $installDir );
+		$installDir = str_replace( '{$name}', $packagePath, $installDir );
+
+		return rtrim($installDir,'/').'/';
 	}
 
 	/**
