@@ -15,11 +15,11 @@ use Composer\Installer\LibraryInstaller;
 class WordPressRelatedInstallers extends LibraryInstaller
 {
 	protected $locations = array(
-		'wordpress-core'        => '{{WEBROOT_PATH}}{{CORE_PATH}}/',
-		'wordpress-plugin'      => '{{WEBROOT_PATH}}{{CONTENT_PATH}}plugins/{$name}/',
-		'wordpress-theme'       => '{{WEBROOT_PATH}}{{CONTENT_PATH}}themes/{$name}/',
-		'wordpress-muplugin'    => '{{WEBROOT_PATH}}{{CONTENT_PATH}}mu-plugins/{$name}/',
-		'wordpress-library'     => '{{WEBROOT_PATH}}{{CONTENT_PATH}}libraries/{$name}/',
+		'wordpress-core'        => '{$webroot_path}{$core_path}/',
+		'wordpress-plugin'      => '{$webroot_path}{$content_path}plugins/{$name}/',
+		'wordpress-theme'       => '{$webroot_path}{$content_path}themes/{$name}/',
+		'wordpress-muplugin'    => '{$webroot_path}{$content_path}mu-plugins/{$name}/',
+		'wordpress-library'     => '{$webroot_path}{$content_path}libraries/{$name}/',
 		'wordpress-devops-core' => 'devops/core/',
 	);
 
@@ -35,6 +35,7 @@ class WordPressRelatedInstallers extends LibraryInstaller
 
 			$packageType = $package->getType();
 			$prettyName  = $package->getPrettyName();
+			$packagePath = basename( $package->getName() );
 
 			if ( ! isset( $this->locations[ $packageType ] ) ) {
 				$message = sprintf( 'Package type [%s] in not supported by wp-composer-installers.', $packageType );
@@ -108,9 +109,10 @@ class WordPressRelatedInstallers extends LibraryInstaller
 			/**
 			 * Allow replacement of CORE, CONTENT and WEBROOT_PATH paths
 			 */
-			$installDir = str_replace( '{{CORE_PATH}}', $corePath, $installDir );
-			$installDir = str_replace( '{{CONTENT_PATH}}', $contentPath, $installDir );
-			$installDir = str_replace( '{{WEBROOT_PATH}}', $webrootPath, $installDir );
+			$installDir = str_replace( '{$core_path}', $corePath, $installDir );
+			$installDir = str_replace( '{$content_path}', $contentPath, $installDir );
+			$installDir = str_replace( '{$webroot_path}', $webrootPath, $installDir );
+			$installDir = str_replace( '{$name}', $packagePath, $installDir );
 
 			$message = null;
 
