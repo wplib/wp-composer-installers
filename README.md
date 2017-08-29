@@ -1,6 +1,10 @@
 # Composer Installers for WordPress
 This is a simple project to allow for easier support of WordPress-related paths when using [Composer](http://getcomposer.org). 
 
+- [Usage](#usage)
+- [Reference](#reference)
+- [Compatibility](#compatibility)
+- [License](#license)
 
 ## Usage
 
