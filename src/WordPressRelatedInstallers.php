@@ -134,7 +134,7 @@ class WordPressRelatedInstallers extends LibraryInstaller
 	 */
 	public function supports($packageType)
 	{
-		$locations = implode('|',$this->locations);
+		$locations = implode('|',array_keys( $this->locations));
 		return preg_match("#^($locations)$#",$packageType);
 	}
 
