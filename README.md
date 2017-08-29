@@ -48,11 +48,11 @@ _"Composer Installers for WordPress" (wp-composer-installers)_ defines the follo
 
 | Package Type |Description |
 |--------------|-------------|
-|`wordpress-core`| [WordPress core](https://wordpress.org/download/release-archive/) itself.<br><br>**Note** the standard WordPress directory layout with WordPress in the web root cannot be supported by Composer so you will need to place it somewhere else, such as defined by the [WordPress Skeleon](https://markjaquith.wordpress.com/2012/05/26/wordpress-skeleton/) which uses`wp/` _(this is our default)_.
+|`wordpress-core`| [WordPress core](https://wordpress.org/download/release-archive/) itself.<br><br>**Note** the standard WordPress directory layout with WordPress in the web root<br>cannot be supported by Composer so you will need to place it somewhere else,<br>such as defined by the [WordPress Skeleon](https://markjaquith.wordpress.com/2012/05/26/wordpress-skeleton/) which uses`wp/` _(this is our default)_.
 |`wordpress-theme`|[WordPress themes](https://wordpress.org/themes/) that you want Composer to install.
-|`wordpress-plugin`|[WordPress plugins](https://wordpress.org/plugins/) you want Composer to install in the standard plugins directory.
-|`wordpress-muplugin`|[WordPress plugins](https://wordpress.org/plugins/) you want Composer to install in the **must-use** plugins directory.
-|`wordpress-devops-core`|A special package type for [WP DevOps](https://github.com/wplib/wp-devops) which includes scripts and configuration files for building, testing and deploying WordPress projects on various continuous integration services.
+|`wordpress-plugin`|[WordPress plugins](https://wordpress.org/plugins/) you want Composer to install in the standard plugins<br>directory.
+|`wordpress-muplugin`|[WordPress plugins](https://wordpress.org/plugins/) you want Composer to install in the **must-use** plugins<br>directory.
+|`wordpress-devops-core`|A special package type for [WP DevOps](https://github.com/wplib/wp-devops) which includes scripts and config<br>files for building, testing and deploying WordPress projects on various<br>continuous integration services.
 
  Or you may prefer another well-known configuration such as  which uses `app/`
 
