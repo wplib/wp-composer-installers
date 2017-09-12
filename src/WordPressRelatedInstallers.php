@@ -146,12 +146,12 @@ class WordPressRelatedInstallers extends LibraryInstaller
 		} while ( false );
 
 		/**
-		 * Allow replacement of CORE, CONTENT and WEBROOT_PATH paths
+		 * Allow replacement of package name as well as CORE, CONTENT, WEBROOT paths
 		 */
+		$installDir = str_replace( '{$name}', $packagePath, $installDir );
 		$installDir = str_replace( '{$core_path}', $corePath, $installDir );
 		$installDir = str_replace( '{$content_path}', $contentPath, $installDir );
 		$installDir = str_replace( '{$webroot_path}', $webrootPath, $installDir );
-		$installDir = str_replace( '{$name}', $packagePath, $installDir );
 
 		return rtrim($installDir,'/').'/';
 	}
