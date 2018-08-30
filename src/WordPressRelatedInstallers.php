@@ -20,7 +20,7 @@ class WordPressRelatedInstallers extends LibraryInstaller
 		'wordpress-theme'       => '{$webroot_path}{$content_path}themes/{$name}/',
 		'wordpress-muplugin'    => '{$webroot_path}{$content_path}mu-plugins/{$name}/',
 		'wordpress-library'     => '{$webroot_path}{$content_path}libraries/{$name}/',
-		'wordpress-devops-core' => 'devops/core/',
+		'wordpress-devops'      => '.circleci/wp-devops',
 	);
 
 	/**
