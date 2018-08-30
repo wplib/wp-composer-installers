@@ -2,7 +2,7 @@
     "name": "wplib/wp-composer-installers",
     "description": "Composer Installers for WordPress projects",
     "type": "composer-plugin",
-    "version": "1.1",
+    "version": "1.2",
     "license": "GPL-3.0",
     "minimum-stability": "dev",
     "prefer-stable": true,
